@@ -1,0 +1,82 @@
+options:
+  prefix: &7EXAMPLE SERVER
+
+on chat:
+    if player does not have permission "bypass.mutechat":
+        if {chatmuted} is true:
+            cancel event
+            send "&cChat is currently muted!" to player
+
+command /mutechat:
+    permission: mutechat
+    trigger:
+        if {chatmuted} is false:
+            broadcast "&6Chat has been muted by &c%player%"
+            set {chatmuted} to true
+        else:
+            broadcast "&6Chat has been unmuted by &c%player%"
+            set {chatmuted} to false
+
+command /tphere <player>:
+    usage: {@prefix} &cWrong! Usage: &7/tphere <player>
+    permission: tphere
+    trigger:
+        if arg-1 is set:
+            teleport arg-1 to player's location
+            send "{@prefix} &6&lYour Server &7&l| &eTeleported %arg-1%&e to you!" to player
+
+#Gamemode Creative Skript:
+
+command /gmc <player>:
+    usage: {@prefix} &cWrong! Usage: &7/gmc <player>
+    permission: gamemode.creative
+    permission message: &cNo Permission!
+    trigger:
+        if arg-1 isn't set:
+            set player's gamemode to creative
+            send "{@prefix} &bYou have changed your gamemode to &6Creative!" to player
+        else:
+            set arg-1's gamemode to creative
+            send "{@prefix} &bYou have changed %arg-1%'s gamemode to &6Creative!" to player
+
+#Gamemode Survival Skript:
+
+command /gms <player>:
+    usage: {@prefix} &cWrong! Usage: &7/gms <player>
+    permission: gamemode.survival
+    permission message: &cNo Permission!
+    trigger:
+        if arg-1 isn't set:
+            set player's gamemode to survival
+            send "{@prefix} &bYou have changed your gamemode to &6Survival!" to player
+        else:
+            set arg-1's gamemode to survival
+            send "{@prefix} &bYou have changed %arg-1%'s gamemode to &6Survival!" to player
+
+#Gamemode Adventure Skript:
+
+command /gma <player>:
+    usage: {@prefix} &cWrong! Usage: &7/gma <player>
+    permission: gamemode.adventure
+    permission message: &cNo Permission!
+    trigger:
+        if arg-1 isn't set:
+            set player's gamemode to adventure
+            send "{@prefix} &bYou have changed your gamemode to &6Adventure!" to player
+        else:
+            set arg-1's gamemode to adventure
+            send "{@prefix} &bYou have changed %arg-1%'s gamemode to &6Adventure!" to player
+
+#Gamemode Spectator Skript:
+
+command /gmsp <player>:
+    usage: {@prefix} &cWrong! Usage: &7/gmsp <player>
+    permission: gamemode.spectator
+    permission message: &cNo Permission!
+    trigger:
+        if arg-1 isn't set:
+            set player's gamemode to spectator
+            send "{@prefix} &bYou have changed your gamemode to &6Spectator!" to player
+        else:
+            set arg-1's gamemode to spectator
+            send "{@prefix} &bYou have changed %arg-1%'s gamemode to &6Spectator!" to player
