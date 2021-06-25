@@ -103,3 +103,16 @@ command /gmsp <player>:
         else:
             set arg-1's gamemode to spectator
             send "{@prefix} &bYou have changed %arg-1%'s gamemode to &6Spectator!" to player
+            
+
+command /clearchat:
+    permission: clearchat
+    permission message: &cNo Permission!
+    trigger:
+        loop 100 times:
+            broadcast " "
+            broadcast " "
+            broadcast " "
+        broadcast "----------"
+        broadcast "{@prefix} &b%player% Has cleared the chat!"
+        broadcast "----------"
