@@ -1,6 +1,29 @@
 options:
   prefix: &7EXAMPLE SERVER
 
+command /clearlag:
+    permission: clearlag.use
+    trigger:
+        clear {_count}
+        loop entities:
+            loop-entity is a dropped item
+            clear loop-entity
+            add 1 to {_count}
+        if {_count} is not set:
+            set {_count} to 0
+        broadcast "&6&l[&cClearLag&6&l] &b&lhas been deleted! %{_count}% items"
+       
+every 4 minutes:
+    broadcast "&6&l[&cClearLag&6&l] &b&lItems will be deleted after 1 minute later"
+    wait 57 seconds
+    broadcast "&6&l[&cClearLag&6&l] &b&lItems will be deleted after 3 second later"
+    wait 1 seconds
+    broadcast "&6&l[&cClearLag&6&l] &b&lItems will be deleted after 2 second later"
+    wait 1 seconds
+    broadcast "&6&l[&cClearLag&6&l] &b&lItems will be deleted after 1 second later"
+    wait 1 seconds
+    make server execute command "/clearlag"
+
 on chat:
     if player does not have permission "bypass.mutechat":
         if {chatmuted} is true:
