@@ -2,7 +2,6 @@ options:
     STitem: &7Mainpage
     NSitem: &6nextpage
     VSitem: &7previous page
-    GlobalPlayerGuiName: &cPlayers
     pagetext: &6Page
  
 
