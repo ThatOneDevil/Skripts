@@ -1,0 +1,53 @@
+options:
+    STitem: &7Mainpage
+    NSitem: &6nextpage
+    VSitem: &7previous page
+    GlobalPlayerGuiName: &cPlayers
+    pagetext: &6Page
+ 
+
+on pickup:
+    if {items::*} does not contain event-item:
+        add event-item to {items::*}  
+        broadcast "&b%player% has collected the item &3%event-item%"
+
+command /reset:
+    trigger:
+        delete {items::*} 
+
+command test:
+    trigger:
+        Menu(player, 0)
+ 
+ 
+function Menu(p: player, page: number):
+    set {_pageStart} to 45*{_page}
+    set {_s} to 0
+    set metadata tag "Menu" of {_p} to chest inventory with 6 rows named "&7Hello There"
+    loop {items::*}:
+        (loop-index parsed as integer) > {_pageStart}
+        set slot {_s} of metadata tag "Menu" of {_p} to loop-value
+        add 1 to {_s}
+        if ({_s}) >= 45:
+            exit loop
+    set slot 49 of metadata tag "Menu" of {_p} to {_p}'s skull named "{@STitem}" with lore "{@pagetext}: &7%{_page}%/%round(size of {GlobalPlayer::*}/(9*6))%"
+    if (size of {items::*}) > {_pageStart} + 45:
+        set slot 50 of metadata tag "Menu" of {_p} to ("MHF_ArrowRight" parsed as offline player)'s skull named "{@NSitem}" with lore "&7%{_page}%"
+    if {_page} > 0:
+        set slot 48 of metadata tag "Menu" of {_p} to ("MHF_ArrowLeft" parsed as offline player)'s skull named "{@VSitem}" with lore "&7%{_page}%"
+    open (metadata tag "Menu" of {_p}) to {_p}
+
+
+inventory click:
+    event-inventory != player' inventory:
+        if event-inventory = (metadata tag "Menu" of player):
+            cancel event
+            event-slot != air:
+                if index of event-slot = 50:
+                    set {_invname} to (uncoloured line 1 of lore of event-slot parsed as integer)+1
+                    Menu(player, {_invname})
+                else if index of event-slot = 48:
+                    set {_invname} to (uncoloured line 1 of lore of event-slot parsed as integer)-1
+                    Menu(player, {_invname})
+                else if index of event-slot = 49:
+                    Menu(player, 0)
