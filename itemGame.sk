@@ -14,7 +14,7 @@ command /reset:
     trigger:
         delete {items::*} 
 
-command test:
+command itemsCollected:
     trigger:
         Menu(player, 0)
  
@@ -22,7 +22,7 @@ command test:
 function Menu(p: player, page: number):
     set {_pageStart} to 45*{_page}
     set {_s} to 0
-    set metadata tag "Menu" of {_p} to chest inventory with 6 rows named "&7Hello There"
+    set metadata tag "Menu" of {_p} to chest inventory with 6 rows named "&bTotal items collected!"
     loop {items::*}:
         (loop-index parsed as integer) > {_pageStart}
         set slot {_s} of metadata tag "Menu" of {_p} to loop-value
