@@ -1,6 +1,28 @@
 options:
   prefix: &7EXAMPLE SERVER
 
+function time(t: text) :: text:
+    set {_n} to {_t}
+    replace all " seconds" and " second" with "s" in {_n}
+    replace all " minutes" and " minute" with "m" in {_n}
+    replace all " hours" and " hour" with "h" in {_n}
+    replace all " days" and " day" with "d" in {_n}
+    replace all " and " with " " in {_n}
+    return {_n}
+
+
+command /playtime [<offlineplayer>]:
+    trigger:
+        set {_p} to arg 1 ? player
+        set {_u} to {_p}'s uuid
+        if {playtime::%{_u}%} is not set:
+            send "{@prefix} &cThat user is not registered."
+        else:
+            set {_time} to time("%{playtime::%{_u}%}%")
+            send ""
+            send "{@prefix} &3%{_p}%&3's playtime: &7%{_time}%"
+            send ""
+
 command /clearlag:
     permission: clearlag.use
     trigger:
@@ -34,10 +56,10 @@ command /mutechat:
     permission: mutechat
     trigger:
         if {chatmuted} is false:
-            broadcast "&6Chat has been muted by &c%player%"
+            broadcast "{@prefix} &6Chat has been muted by &c%player%"
             set {chatmuted} to true
         else:
-            broadcast "&6Chat has been unmuted by &c%player%"
+            broadcast "{@prefix} &6Chat has been unmuted by &c%player%"
             set {chatmuted} to false
 
 command /tphere <player>:
