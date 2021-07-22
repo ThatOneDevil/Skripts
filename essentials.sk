@@ -1,6 +1,10 @@
 options:
   prefix: &7EXAMPLE SERVER
 
+every second:
+    loop all players:
+        add 1 second to {playtime::%loop-player's uuid%}
+
 function time(t: text) :: text:
     set {_n} to {_t}
     replace all " seconds" and " second" with "s" in {_n}
