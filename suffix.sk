@@ -11,9 +11,9 @@ command /Createsuffix [<text>] [<text>]:
             if arg-2 is set:
                 give player name tag named "%coloured arg-2%" with lore "&7Permission: &8%arg-1%" and "" and "&7Put this in the /suffixgui to add a suffix to the menu!"
             else:
-                send "&c/Createsuffix <permission> <suffix>"
+                send "&c/Createsuffix <permission> <suffix> &7&o(Created by ThatOneDevil)"
         else:
-            send "&c/Createsuffix <permission> <suffix>"
+            send "&c/Createsuffix <permission> <suffix> &7&o(Created by ThatOneDevil)"
 
 command /Createprefix [<text>] [<text>]:
     permission: Createprefix
@@ -22,9 +22,9 @@ command /Createprefix [<text>] [<text>]:
             if arg-2 is set:
                 give player name tag named "%coloured arg-2%" with lore "&7Permission: &8%arg-1%" and "" and "&7Put this in the /prefixgui to add a suffix to the menu!"
             else:
-                send "&c/createprefix <permission> <prefix>"
+                send "&c/createprefix <permission> <prefix> &7&o(Created by ThatOneDevil)"
         else:
-            send "&c/createprefix <permission> <prefix>"
+            send "&c/createprefix <permission> <prefix> &7&o(Created by ThatOneDevil)"
 
 function prefixGui(p: player, page: integer):
     set {_u} to uuid of {_p}
