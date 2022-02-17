@@ -9,3 +9,5 @@ This is a github for skripts [This is for a minecraft plugin called skripts, mak
 - I also renamed the file to "vb" for color formatting
 
 - Link: https://dev.bukkit.org/projects/skript
+
+- ### Widley used addons Skbee, Skript, Skrayfall
