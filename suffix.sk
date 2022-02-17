@@ -1,0 +1,210 @@
+options:
+    STitem: &7Mainpage
+    NSitem: &6nextpage
+    VSitem: &7previous page
+    pagetext: &6Page
+
+command /Createsuffix [<text>] [<text>]:
+    permission: Createprefix
+    trigger:
+        if arg-1 is set:
+            if arg-2 is set:
+                give player name tag named "%coloured arg-2%" with lore "&7Permission: &8%arg-1%" and "" and "&7Put this in the /suffixgui to add a suffix to the menu!"
+            else:
+                send "&c/Createsuffix <permission> <suffix>"
+        else:
+            send "&c/Createsuffix <permission> <suffix>"
+
+command /Createprefix [<text>] [<text>]:
+    permission: Createprefix
+    trigger:
+        if arg-1 is set:
+            if arg-2 is set:
+                give player name tag named "%coloured arg-2%" with lore "&7Permission: &8%arg-1%" and "" and "&7Put this in the /prefixgui to add a suffix to the menu!"
+            else:
+                send "&c/createprefix <permission> <prefix>"
+        else:
+            send "&c/createprefix <permission> <prefix>"
+
+function prefixGui(p: player, page: integer):
+    set {_u} to uuid of {_p}
+    set {_pageStart} to 45*{_page}
+    set {_s} to 0
+    set metadata tag "prefix" of {_p} to chest inventory with 6 rows named "&7• &6Prefix List!"
+    loop {prefixGui::prefixes::*}:
+        (loop-index parsed as integer) > {_pageStart}
+
+        set {_i} to loop-value
+        set {_name} to name of {_i}
+        set {_permission::*} to the 1st line of {_i}'s lore split at ":"
+        replace all " " in {_permission::*} with ""
+        if {_p} has permission "%uncoloured {_permission::2}%":
+            set slot {_s} of metadata tag "prefix" of {_p} to {_i} named "%{_name}%" with lore "&7" and "&aUnlocked" and "&7Click to &aEquip"
+        else:
+            set slot {_s} of metadata tag "prefix" of {_p} to {_i} named "%{_name}%" with lore "&7" and "&cLocked" and "&7To unlock this use &a/buy"
+
+        add 1 to {_s}
+        if ({_s}) >= 45:
+            exit loop
+    if (size of {prefixGui::prefixes::*}) > {_pageStart} + 45:
+        set slot 50 of metadata tag "prefix" of {_p} to ("MHF_ArrowRight" parsed as offline player)'s skull named "{@NSitem}" with lore "&7%{_page}%"
+    else:
+        set slot 50 of metadata tag "prefix" of {_p} to barrier named "&cNo page!"     
+    if {_page} > 0:
+        set slot 48 of metadata tag "prefix" of {_p} to ("MHF_ArrowLeft" parsed as offline player)'s skull named "{@VSitem}" with lore "&7%{_page}%"
+    else:
+        set slot 48 of metadata tag "prefix" of {_p} to barrier named "&cNo page!"    
+    set slot 45 and 46,47,51,52,53 of metadata tag "prefix" of {_p} to gray stained glass pane named "&7"
+    set slot 49 of metadata tag "prefix" of {_p} to {_p}'s skull named "&e%{_p}%"
+    set slot 53 of metadata tag "prefix" of {_p} to glowing barrier named "&cRemove Suffix!"
+    open (metadata tag "prefix" of {_p}) to {_p}
+
+function suffixGui(p: player, page: integer):
+    set {_u} to uuid of {_p}
+    set {_pageStart} to 45*{_page}
+    set {_s} to 0
+    set metadata tag "suffix" of {_p} to chest inventory with 6 rows named "&7• &6Suffix List!"
+    loop {suffixGui::suffixes::*}:
+        (loop-index parsed as integer) > {_pageStart}
+
+        set {_i} to loop-value
+        set {_name} to name of {_i}
+        set {_permission::*} to the 1st line of {_i}'s lore split at ":"
+        replace all " " in {_permission::*} with ""
+        if {_p} has permission "%uncoloured {_permission::2}%":
+            set slot {_s} of metadata tag "suffix" of {_p} to {_i} named "%{_name}%" with lore "&7" and "&aUnlocked" and "&7Click to &aEquip"
+        else:
+            set slot {_s} of metadata tag "suffix" of {_p} to {_i} named "%{_name}%" with lore "&7" and "&cLocked" and "&7To unlock this use &a/buy"
+
+        add 1 to {_s}
+        if ({_s}) >= 45:
+            exit loop
+    if (size of {suffixGui::suffixes::*}) > {_pageStart} + 45:
+        set slot 50 of metadata tag "suffix" of {_p} to ("MHF_ArrowRight" parsed as offline player)'s skull named "{@NSitem}" with lore "&7%{_page}%"
+    else:
+        set slot 50 of metadata tag "suffix" of {_p} to barrier named "&cNo page!"     
+    if {_page} > 0:
+        set slot 48 of metadata tag "suffix" of {_p} to ("MHF_ArrowLeft" parsed as offline player)'s skull named "{@VSitem}" with lore "&7%{_page}%"
+    else:
+        set slot 48 of metadata tag "suffix" of {_p} to barrier named "&cNo page!"    
+    set slot 45 and 46,47,51,52 of metadata tag "suffix" of {_p} to gray stained glass pane named "&7"
+    set slot 49 of metadata tag "suffix" of {_p} to {_p}'s skull named "&e%{_p}%"
+    set slot 53 of metadata tag "suffix" of {_p} to glowing barrier named "&cRemove Suffix!"
+    open (metadata tag "suffix" of {_p}) to {_p}
+
+
+command /suffix:
+    trigger:
+        suffixGui(player, 0)
+
+command /prefix:
+    trigger:
+        prefixGui(player, 0)
+
+on inventory click:
+    if event-inventory = (metadata "suffix" of player):
+        cancel event
+        if name of event-slot is "{@NSitem}":
+            set {_invslot} to (uncoloured line 1 of lore of event-slot parsed as integer)+1
+            suffixGui(player, {_invslot})
+        if name of event-slot is "{@VSitem}":
+            set {_invslot} to (uncoloured line 1 of lore of event-slot parsed as integer)-1
+            suffixGui(player, {_invslot})
+
+        if index of event-slot is not 9:
+            set {_i} to event-item 
+            set {_name} to uncoloured name of {_i}
+            set {_perm} to the 2nd line of {_i}'s lore
+            if {_perm} is "&aUnlocked":
+                send "&6You now have &e%{_name}% &6as your suffix"
+                set {suffix::%player's uuid%} to " %(name of {_i} ? {_i})%"
+            if {_perm} is "&cLocked":
+                send "&7You can purchase on our store! &a/buy"
+        if index of event-slot is 53:
+            delete {suffix::%player's uuid%}
+
+on inventory click:
+    if event-inventory = (metadata "prefix" of player):
+        cancel event
+        if name of event-slot is "{@NSitem}":
+            set {_invslot} to (uncoloured line 1 of lore of event-slot parsed as integer)+1
+            prefixGui(player, {_invslot})
+
+        if name of event-slot is "{@VSitem}":
+            set {_invslot} to (uncoloured line 1 of lore of event-slot parsed as integer)-1
+            prefixGui(player, {_invslot})
+
+        if index of event-slot is not 9:
+            set {_i} to event-item 
+            set {_name} to uncoloured name of {_i}
+            set {_perm} to the 2nd line of {_i}'s lore
+            if {_perm} is "&aUnlocked":
+                send "&6You now have &e%{_name}% &6as your prefix"
+                set {prefix::%player's uuid%} to "%(name of {_i} ? {_i})% "
+            if {_perm} is "&cLocked":
+                send "&7You can purchase on our store! &a/buy"
+        if index of event-slot is 53:
+            delete {prefix::%player's uuid%}
+
+command /prefixgui:
+    permission: op
+    trigger:
+        set metadata tag "prefixgui" of player to chest inventory with 6 rows named "&cPrefixes gui &4(Admin)"
+        set {_n} to 0
+        loop {prefixGui::prefixes::*}:
+            set {_i} to loop-value
+            set slot {_n} of metadata tag "prefixgui" of player to {_i} 
+            add 1 to {_n}
+        open (metadata tag "prefixgui" of player) to player
+        play sound "ENTITY.EXPERIENCE_ORB.PICKUP" with volume 0.5 and pitch 1 to player
+
+on inventory click:
+    if event-inventory = (metadata "prefixgui" of player):
+        if event-slot is not air:
+            remove event-item from {prefixGui::prefixes::*}
+
+on inventory close:
+    if event-inventory = (metadata "prefixgui" of player):
+        loop all items in top inventory of player:
+            if loop-item is not air:
+                if loop-item is name tag:
+                    if lore of loop-item contains "&7Put this in the /prefixgui to add a suffix to the menu!":
+                        if (size of {prefixGui::prefixes::*}) = 27:
+                            send "&cSuffix gui is full :("
+                        else:
+                            if {prefixGui::prefixes::*} does not contain loop-item:
+                                add 1 of loop-item to {prefixGui::prefixes::*}
+
+command /suffixgui:
+    permission: op
+    trigger:
+        set metadata tag "suffixgui" of player to chest inventory with 6 rows named "&cSuffixes gui &4(Admin)"
+        set {_n} to 0
+        loop {suffixGui::suffixes::*}:
+            set {_i} to loop-value
+            set slot {_n} of metadata tag "suffixgui" of player to {_i} 
+            add 1 to {_n}
+        open (metadata tag "suffixgui" of player) to player
+        play sound "ENTITY.EXPERIENCE_ORB.PICKUP" with volume 0.5 and pitch 1 to player
+
+on inventory click:
+    if event-inventory = (metadata "suffixgui" of player):
+        if event-slot is not air:
+            remove event-item from {suffixGui::suffixes::*}
+
+on inventory close:
+    if event-inventory = (metadata "suffixgui" of player):
+        loop all items in top inventory of player:
+            if loop-item is not air:
+                if loop-item is name tag:
+                    if lore of loop-item contains "&7Put this in the /suffixgui to add a suffix to the menu!":
+                        if (size of {suffixGui::suffixes::*}) = 27:
+                            send "&cSuffix gui is full :("
+                        else:
+                            if {suffixGui::suffixes::*} does not contain loop-item:
+                                add 1 of loop-item to {suffixGui::suffixes::*}
+
+on chat:
+    set {_suffix} to {suffix::%player's uuid%} ? ""
+    set {_prefix} to {prefix::%player's uuid%} ? ""
+    set chat format to "%{_prefix}%%player%%{_suffix}%&7: &7%message%"
