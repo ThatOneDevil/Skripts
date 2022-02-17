@@ -10,4 +10,4 @@ This is a github for skripts [This is for a minecraft plugin called skripts, mak
 
 - Link: https://dev.bukkit.org/projects/skript
 
-- ### Widley used addons Skbee, Skript, Skrayfall
+- ### Widley used addons Skbee, Skript, Skrayfall, Skellet (Vault, Essentials For dependencies)
