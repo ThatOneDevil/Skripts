@@ -85,6 +85,7 @@ command /history [<offlineplayer>]:
     permission: punish.history
     trigger: 
         history(player, arg-1, 0)
+        send "&7&o(Created by ThatOneDevil)" to player
 
 function history(p: player, user: offlineplayer, page: integer):
     set {_u} to uuid of {_user}
@@ -265,7 +266,7 @@ command /punish [<offlineplayer>]:
     permission: permission.punish
     trigger:
         if arg-1 is not set:
-            send "&c&lError! &7Please specify a player!"
+            send "&c&lError! &7Please specify a player! &7&o(Created by ThatOneDevil)"
             play sound "ENTITY.VILLAGER.NO" with volume 0.5 and pitch 1 to player
         else:
             set {_p} to arg-1
@@ -356,7 +357,7 @@ command /clearhistory [<offlineplayer>]:
     trigger:
         set {_u} to arg-1's uuid
         delete {punishHistory::%{_u}%::*}
-        send "&aCleared %arg-1%'s history" to player
+        send "&aCleared %arg-1%'s history &7&o(Created by ThatOneDevil)" to player
 
 command /resetVars:
     permission: permission.resetVars
