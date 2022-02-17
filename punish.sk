@@ -361,11 +361,10 @@ command /clearhistory [<offlineplayer>]:
 command /resetVars:
     permission: permission.resetVars
     trigger:
-        if executor is "ThatOneDevil" or "LoLMaybe":
-            delete {punishConfirm::*}
-            delete {punishConfirm::time::*}
-            delete {punishConfirm::Broadcast::*}
-            delete {punishConfirm::type::*} 
-            delete {punishConfirm::reasonMsg::*}
-            delete {punishHistory::*}
-            delete {punishTime::type::*}
+        delete {punishConfirm::*}
+        delete {punishConfirm::time::*}
+        delete {punishConfirm::Broadcast::*}
+        delete {punishConfirm::type::*} 
+        delete {punishConfirm::reasonMsg::*}
+        delete {punishHistory::*}
+        delete {punishTime::type::*}
