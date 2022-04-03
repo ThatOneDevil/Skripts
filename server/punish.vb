@@ -96,13 +96,13 @@ function history(p: player, user: offlineplayer, page: integer):
         (loop-index parsed as integer) > {_pageStart}
         set {_type::*} to Uncolored loop-value split at " "
         if {_type::3} is "warn":
-            set slot {_s} of metadata tag "history" of {_p} to paper named "%loop-value%" with hidden attributes flag
+            set slot {_s} of metadata tag "history" of {_p} to paper named "%loop-value%"
         if {_type::3} is "kick":
-            set slot {_s} of metadata tag "history" of {_p} to leather boots named "%loop-value%" with hidden attributes flag
+            set slot {_s} of metadata tag "history" of {_p} to leather boots named "%loop-value%"
         if {_type::3} is "ban":
-            set slot {_s} of metadata tag "history" of {_p} to beacon named "%loop-value%" with hidden attributes flag
+            set slot {_s} of metadata tag "history" of {_p} to beacon named "%loop-value%"
         if {_type::3} is "mute":
-            set slot {_s} of metadata tag "history" of {_p} to barrier named "%loop-value%" with hidden attributes flag
+            set slot {_s} of metadata tag "history" of {_p} to barrier named "%loop-value%"
         add 1 to {_s}
         if ({_s}) >= 45:
             exit loop
