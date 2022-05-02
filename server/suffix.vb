@@ -11,20 +11,20 @@ command /Createsuffix [<text>] [<text>]:
             if arg-2 is set:
                 give player name tag named "%coloured arg-2%" with lore "&7Permission: &8%arg-1%" and "" and "&7Put this in the /suffixgui to add a suffix to the menu!"
             else:
-                send "&c/Createsuffix <permission> <suffix> &7&o(Created by ThatOneDevil)"
+                send "&c/Createsuffix <permission> <suffix>"
         else:
-            send "&c/Createsuffix <permission> <suffix> &7&o(Created by ThatOneDevil)"
+            send "&c/Createsuffix <permission> <suffix>"
 
 command /Createprefix [<text>] [<text>]:
     permission: Createprefix
     trigger:
         if arg-1 is set:
             if arg-2 is set:
-                give player name tag named "%coloured arg-2%" with lore "&7Permission: &8%arg-1%" and "" and "&7Put this in the /prefixgui to add a suffix to the menu!"
+                give player name tag named "%coloured arg-2%" with lore "&7Permission: &8%arg-1%" and "" and "&7Put this in the /prefixgui to add a prefix to the menu!"
             else:
-                send "&c/createprefix <permission> <prefix> &7&o(Created by ThatOneDevil)"
+                send "&c/createprefix <permission> <prefix>"
         else:
-            send "&c/createprefix <permission> <prefix> &7&o(Created by ThatOneDevil)"
+            send "&c/createprefix <permission> <prefix>"
 
 function prefixGui(p: player, page: integer):
     set {_u} to uuid of {_p}
@@ -36,8 +36,10 @@ function prefixGui(p: player, page: integer):
 
         set {_i} to loop-value
         set {_name} to name of {_i}
-        set {_permission::*} to the 1st line of {_i}'s lore split at ":"
+        set {_lore::*} to lore of {_i}
+        set {_permission::*} to {_lore::1} split at ":"
         replace all " " in {_permission::*} with ""
+
         if {_p} has permission "%uncoloured {_permission::2}%":
             set slot {_s} of metadata tag "prefix" of {_p} to {_i} named "%{_name}%" with lore "&7" and "&aUnlocked" and "&7Click to &aEquip"
         else:
@@ -56,7 +58,7 @@ function prefixGui(p: player, page: integer):
         set slot 48 of metadata tag "prefix" of {_p} to barrier named "&cNo page!"    
     set slot 45 and 46,47,51,52,53 of metadata tag "prefix" of {_p} to gray stained glass pane named "&7"
     set slot 49 of metadata tag "prefix" of {_p} to {_p}'s skull named "&e%{_p}%"
-    set slot 53 of metadata tag "prefix" of {_p} to glowing barrier named "&cRemove Suffix!"
+    set slot 53 of metadata tag "prefix" of {_p} to barrier named "&cRemove Prefix!"
     open (metadata tag "prefix" of {_p}) to {_p}
 
 function suffixGui(p: player, page: integer):
@@ -69,8 +71,10 @@ function suffixGui(p: player, page: integer):
 
         set {_i} to loop-value
         set {_name} to name of {_i}
-        set {_permission::*} to the 1st line of {_i}'s lore split at ":"
+        set {_lore::*} to lore of {_i}
+        set {_permission::*} to {_lore::1} split at ":"
         replace all " " in {_permission::*} with ""
+
         if {_p} has permission "%uncoloured {_permission::2}%":
             set slot {_s} of metadata tag "suffix" of {_p} to {_i} named "%{_name}%" with lore "&7" and "&aUnlocked" and "&7Click to &aEquip"
         else:
@@ -89,7 +93,7 @@ function suffixGui(p: player, page: integer):
         set slot 48 of metadata tag "suffix" of {_p} to barrier named "&cNo page!"    
     set slot 45 and 46,47,51,52 of metadata tag "suffix" of {_p} to gray stained glass pane named "&7"
     set slot 49 of metadata tag "suffix" of {_p} to {_p}'s skull named "&e%{_p}%"
-    set slot 53 of metadata tag "suffix" of {_p} to glowing barrier named "&cRemove Suffix!"
+    set slot 53 of metadata tag "suffix" of {_p} to barrier named "&cRemove Suffix!"
     open (metadata tag "suffix" of {_p}) to {_p}
 
 
@@ -114,11 +118,15 @@ on inventory click:
         if index of event-slot is not 9:
             set {_i} to event-item 
             set {_name} to uncoloured name of {_i}
-            set {_perm} to the 2nd line of {_i}'s lore
-            if {_perm} is "&aUnlocked":
+
+            set {_lore::*} to lore of {_i}
+            set {_permission::*} to {_lore::2} split at ":"
+            replace all " " in {_permission::*} with ""
+
+            if {_permission::*} is "&aUnlocked":
                 send "&6You now have &e%{_name}% &6as your suffix"
                 set {suffix::%player's uuid%} to " %(name of {_i} ? {_i})%"
-            if {_perm} is "&cLocked":
+            if {_permission::*} is "&cLocked":
                 send "&7You can purchase on our store! &a/buy"
         if index of event-slot is 53:
             delete {suffix::%player's uuid%}
@@ -137,11 +145,15 @@ on inventory click:
         if index of event-slot is not 9:
             set {_i} to event-item 
             set {_name} to uncoloured name of {_i}
-            set {_perm} to the 2nd line of {_i}'s lore
-            if {_perm} is "&aUnlocked":
+
+            set {_lore::*} to lore of {_i}
+            set {_permission::*} to {_lore::2} split at ":"
+            replace all " " in {_permission::*} with ""
+
+            if {_permission::*} is "&aUnlocked":
                 send "&6You now have &e%{_name}% &6as your prefix"
                 set {prefix::%player's uuid%} to "%(name of {_i} ? {_i})% "
-            if {_perm} is "&cLocked":
+            if {_permission::*} is "&cLocked":
                 send "&7You can purchase on our store! &a/buy"
         if index of event-slot is 53:
             delete {prefix::%player's uuid%}
@@ -168,12 +180,9 @@ on inventory close:
         loop all items in top inventory of player:
             if loop-item is not air:
                 if loop-item is name tag:
-                    if lore of loop-item contains "&7Put this in the /prefixgui to add a suffix to the menu!":
-                        if (size of {prefixGui::prefixes::*}) = 27:
-                            send "&cSuffix gui is full :("
-                        else:
-                            if {prefixGui::prefixes::*} does not contain loop-item:
-                                add 1 of loop-item to {prefixGui::prefixes::*}
+                    if lore of loop-item contains "&7Put this in the /prefixgui to add a prefix to the menu!":
+                        if {prefixGui::prefixes::*} does not contain loop-item:
+                            add 1 of loop-item to {prefixGui::prefixes::*}
 
 command /suffixgui:
     permission: op
@@ -198,13 +207,6 @@ on inventory close:
             if loop-item is not air:
                 if loop-item is name tag:
                     if lore of loop-item contains "&7Put this in the /suffixgui to add a suffix to the menu!":
-                        if (size of {suffixGui::suffixes::*}) = 27:
-                            send "&cSuffix gui is full :("
-                        else:
-                            if {suffixGui::suffixes::*} does not contain loop-item:
-                                add 1 of loop-item to {suffixGui::suffixes::*}
+                        if {suffixGui::suffixes::*} does not contain loop-item:
+                            add 1 of loop-item to {suffixGui::suffixes::*}
 
-on chat:
-    set {_suffix} to {suffix::%player's uuid%} ? ""
-    set {_prefix} to {prefix::%player's uuid%} ? ""
-    set chat format to "%{_prefix}%%player%%{_suffix}%&7: &7%message%"
