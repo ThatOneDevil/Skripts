@@ -6,6 +6,6 @@ This is a github for skripts [This is for a minecraft plugin called skripts, mak
 ## INFO
 - https://sites.google.com/view/thatonedevilskripts/home
 
-- I also renamed the file to "vb" for color formatting
+- Link: https://dev.bukkit.org/projects/skript
 
 - ### Widely used addons Skbee, Skript, Skrayfall, Skellet (Vault dependencie)
